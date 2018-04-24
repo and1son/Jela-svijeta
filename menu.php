@@ -59,10 +59,12 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                 
                 $izraz = $veza->prepare("            
                   select count(a.sifra)
-					from jelo a 
-					inner join tag b on a.tag=b.sifra
-					inner join kategorija c on a.kategorija=c.sifra 
-                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija) like :uvjet");
+          					from jelo a 
+            					inner join tag b on a.tag=b.sifra
+            					inner join kategorija c on a.kategorija=c.sifra
+                      inner join jelo_sastojak d on a.sifra=d.jelo
+                      inner join sastojak e on d.sastojak=e.sifra  
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet");
                 $izraz->execute(array("uvjet"=>$uvjet));
                 $ukupnoRedova = $izraz->fetchColumn();
                 $ukupnoStranica = ceil($ukupnoRedova/$brojRezultataPoStranici);
@@ -98,13 +100,15 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   a.opis,
                   a.cijena,
                   b.nazivTag,
-                  c.nazivKategorija
+                  c.nazivKategorija,
+                  e.nazivSastojak
 
-	              from jelo a 
-				  inner join tag b on a.tag=b.sifra
-				  inner join kategorija c on a.kategorija=c.sifra 
-       
-                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija) like :uvjet
+	                from jelo a 
+          				  inner join tag b on a.tag=b.sifra
+          				  inner join kategorija c on a.kategorija=c.sifra
+                    inner join jelo_sastojak d on a.sifra=d.jelo
+                    inner join sastojak e on d.sastojak=e.sifra
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet
                   order by nazivJelo limit :stranica, :brojRezultataPoStranici
                   ");
                 $izraz->bindValue("stranica", $stranica* $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
@@ -122,6 +126,8 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                         <td><?php echo $red->nazivJelo; ?></td>
                         <td><?php echo $red->nazivTag; ?></td>
                         <td><?php echo $red->nazivKategorija; ?></td>
+                        <td><?php echo $red->nazivSastojak; ?></td>
+
                       </tr>
 
                      <?php endforeach; ?>
