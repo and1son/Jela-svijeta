@@ -5,7 +5,7 @@ use jela;
 
 create table jelo(
 sifra int not null primary key auto_increment,
-naziv varchar(50) not null,
+nazivJelo varchar(50) not null,
 opis varchar(50),
 cijena int,
 tag int not null,
@@ -15,7 +15,7 @@ kategorija int null
 
 create table sastojak(
 sifra int not null primary key auto_increment,
-naziv varchar(50) not null,
+nazivSastojak varchar(50) not null,
 slug varchar(50) not null
 );
 
@@ -27,13 +27,13 @@ sastojak int not null
 
 create table kategorija(
 sifra int not null primary key auto_increment,
-naziv varchar(50) not null,
+nazivKategorija varchar(50) not null,
 slug varchar(50) not null
 );
 
 create table tag(
 sifra int not null primary key auto_increment,
-naziv varchar(50) not null,
+nazivTag varchar(50) not null,
 slug varchar(50) not null
 );
 
@@ -42,7 +42,7 @@ alter table jelo_sastojak add foreign key (jelo) references jelo(sifra);
 alter table jelo_sastojak add foreign key (sastojak) references sastojak(sifra);
 alter table jelo add foreign key (kategorija) references kategorija(sifra);
 
-insert into sastojak(naziv,slug) values
+insert into sastojak(nazivSastojak,slug) values
 	('rajčica','slug-rajc'),
 	('sir','slug-sir'),
 	('gljive','slug-gljive'),
@@ -61,7 +61,7 @@ insert into sastojak(naziv,slug) values
 	('mozzarela','slug-mozzarela'),
 	('bosiljak','slug-bosiljak');
 
-insert into kategorija(naziv,slug) values
+insert into kategorija(nazivKategorija,slug) values
 	('pizza','slug-pizza'),
 	('grill','slug-grill'),
 	('sendviči','slug-sendvici'),
@@ -72,7 +72,7 @@ insert into kategorija(naziv,slug) values
 	('doručak','slug-dorucak'),
 	('deserti','slug-deserti');
 
-insert into tag(naziv,slug) values
+insert into tag(nazivTag,slug) values
 	('naslov taga 1','slug-tag1'),
 	('naslov taga 2','slug-tag2'),
 	('naslov taga 3','slug-tag3'),
@@ -83,7 +83,7 @@ insert into tag(naziv,slug) values
 	('naslov taga 8','slug-tag8'),
 	('naslov taga 9','slug-tag9');
 
-insert into jelo(naziv,opis,cijena,tag,kategorija) values
+insert into jelo(nazivJelo,opis,cijena,tag,kategorija) values
 	('Margarita','null','null','1','1'),
 	('Vesuvio','null','null','2','1'),
 	('Slavonska','null','null','3','1'),
