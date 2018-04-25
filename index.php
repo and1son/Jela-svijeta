@@ -4,6 +4,11 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+
+<?php
+	require_once 'init.php';
+	
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,9 +24,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<a href="#" class="navicon"></a>
 				<div class="toggle">
 					<ul class="toggle-menu">
-						<li><a class="active" href="index.php">Home</a></li>
-						<li><a  href="menu.php">Menu</a></li>
-						<li><a  href="contact.php">Contact</a></li>
+						<li><a class="active" href="index.php"><?php echo $lang['home'];?></a></li>
+						<li><a href="menu.php"><?php echo $lang['menu'];?> </a></li>
+						<li><a href="contact.php"><?php echo $lang['contact'];?></a></li>
 					</ul>
 				</div>
 			<script>

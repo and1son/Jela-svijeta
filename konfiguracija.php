@@ -17,8 +17,6 @@ if($_SERVER["HTTP_HOST"]==="andibasic.byethost8.com"){
 	$dbpass="";
 	}
 
-
-
 try{
 	$veza = new PDO("mysql:host=" . $host . ";dbname=" . $dbname,$dbuser,$dbpass);
 	$veza->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);

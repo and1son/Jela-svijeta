@@ -45,13 +45,11 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
             <div class="row">
                <div class="font-1 helmet text-center">
               
-              
                <form method="get">
                   <input type="text" name="uvjet" 
                   placeholder="uvjet pretraživanja"
                   value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
                 </form
-
              
                 <?php
           
@@ -60,11 +58,11 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                 $izraz = $veza->prepare("            
                   select 
                     count(DISTINCT a.sifra)
-                from jelo a 
-            					inner join tag b on a.tag=b.sifra
-            					inner join kategorija c on a.kategorija=c.sifra
-                      inner join jelo_sastojak d on a.sifra=d.jelo
-                      inner join sastojak e on d.sastojak=e.sifra  
+                  from jelo a 
+          					inner join tag b on a.tag=b.sifra
+          					inner join kategorija c on a.kategorija=c.sifra
+                    inner join jelo_sastojak d on a.sifra=d.jelo
+                    inner join sastojak e on d.sastojak=e.sifra  
                   where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet");
                 $izraz->execute(array("uvjet"=>$uvjet));
                 $ukupnoRedova = $izraz->fetchColumn();
@@ -90,21 +88,20 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                       </tr>
                     </thead>
                     <tbody>
-
-
+                      
                 <?php
                       
                 $izraz = $veza->prepare("
                   select 
-                  a.sifra,
-                  a.nazivJelo,
-                  a.opis,
-                  a.cijena,
-                  b.nazivTag,
-                  c.nazivKategorija,
-                  GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak
-
-	                from jelo a 
+                    a.sifra,
+                    a.nazivJelo,
+                    a.opis,
+                    a.cijena,
+                    b.nazivTag,
+                    c.nazivKategorija,
+                    GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak
+	                
+                  from jelo a 
           				  inner join tag b on a.tag=b.sifra
           				  inner join kategorija c on a.kategorija=c.sifra
                     inner join jelo_sastojak d on a.sifra=d.jelo
