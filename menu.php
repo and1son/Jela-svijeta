@@ -58,8 +58,9 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                 $uvjet = "%" . (isset($_GET["uvjet"]) ? $_GET["uvjet"] : "") . "%";
                 
                 $izraz = $veza->prepare("            
-                  select count(a.sifra)
-          					from jelo a 
+                  select 
+                    count(DISTINCT a.sifra)
+                from jelo a 
             					inner join tag b on a.tag=b.sifra
             					inner join kategorija c on a.kategorija=c.sifra
                       inner join jelo_sastojak d on a.sifra=d.jelo
@@ -101,7 +102,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   a.cijena,
                   b.nazivTag,
                   c.nazivKategorija,
-                  e.nazivSastojak
+                  GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak
 
 	                from jelo a 
           				  inner join tag b on a.tag=b.sifra
@@ -109,7 +110,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                     inner join jelo_sastojak d on a.sifra=d.jelo
                     inner join sastojak e on d.sastojak=e.sifra
                   where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet
-                  order by nazivJelo limit :stranica, :brojRezultataPoStranici
+                  group by a.sifra, a.nazivJelo order by 1 limit :stranica, :brojRezultataPoStranici
                   ");
                 $izraz->bindValue("stranica", $stranica* $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
                 $izraz->bindValue("brojRezultataPoStranici", $brojRezultataPoStranici, PDO::PARAM_INT);
