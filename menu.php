@@ -4,7 +4,9 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+
 <?php include_once 'konfiguracija.php';
+require_once 'init.php';
 $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
 <!DOCTYPE html>
 <html>
@@ -22,22 +24,8 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
 	<?php include_once 'include/menu-menu.php'; ?>		
 
 <!--content-->
-	<div class="menu">
-		<div class="container">
-			<div class="menu-top">
-				<div class="col-md-4 menu-left animated wow fadeInLeft" data-wow-duration="1000ms" data-wow-delay="500ms">
-					<h3>Menu</h3>
-					<label><i class="glyphicon glyphicon-menu-up"></i></label>
-					<span>There are many variations</span>
-				</div>
-				<div class="col-md-8 menu-right animated wow fadeInRight" data-wow-duration="1000ms" data-wow-delay="500ms">
-					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-				</div>
-				<div class="clearfix"> </div>
-			</div>
-			
-		</div>
-	</div>
+  <?php include_once 'include/content-menu.php'; ?>
+
 
 	   <section class="head index-part-1">      
           <div class="wow">
@@ -47,7 +35,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
               
                <form method="get">
                   <input type="text" name="uvjet" 
-                  placeholder="uvjet pretraživanja"
+                  placeholder="<?php echo $lang['term'];?>"
                   value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
                 </form
              
@@ -81,10 +69,10 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>Jelo</th>
-                        <th>Tag</th>
-                        <th>Kategorija</th>
-                        <th>Sastojci</th>
+                        <th><?php echo $lang['meal'];?></th>
+                        <th><?php echo $lang['tag'];?></th>
+                        <th><?php echo $lang['category'];?></th>
+                        <th><?php echo $lang['ingredient'];?></th>
                       </tr>
                     </thead>
                     <tbody>

@@ -3,14 +3,14 @@
 			<div class="footer-head">
 				<div class="col-md-8 footer-top animated wow fadeInRight" data-wow-duration="1000ms" data-wow-delay="500ms">
 					<ul class=" in">
-						<li><a href="index.php">Home</a></li>
-						<li><a  href="menu.php">Menu</a></li>
-						<li><a  href="contact.php">Contact</a></li>
+						<li><a href="index.php"><?php echo $lang['home'];?></a></li>
+						<li><a  href="menu.php"><?php echo $lang['menu'];?></a></li>
+						<li><a  href="contact.php"><?php echo $lang['contact'];?></a></li>
 					</ul>					
-						<span>There are many variations of passages</span>
+						<span><?php echo $lang['variation1'];?></span>
 				</div>
 				<div class="col-md-4 footer-bottom  animated wow fadeInLeft" data-wow-duration="1000ms" data-wow-delay="500ms">
-					<h2>Follow Us</h2>
+					<h2><?php echo $lang['follow'];?></h2>
 					<label><i class="glyphicon glyphicon-menu-up"></i></label>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis.</p>
 					<ul class="social-ic">
@@ -25,6 +25,6 @@
 			<div class="clearfix"> </div>
 					
 			</div>
-			<p class="footer-class animated wow bounce" data-wow-duration="1000ms" data-wow-delay="500ms">&copy; 2018. Plava Tvornica - Jela svijeta. Andi Bašić. Design by  <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
+			<p class="footer-class animated wow bounce" data-wow-duration="1000ms" data-wow-delay="500ms">&copy; 2018. Plava Tvornica - Jela svijeta. Andi Bašić. <?php echo $lang['design'];?> <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
 		</div>
 	</div>		
