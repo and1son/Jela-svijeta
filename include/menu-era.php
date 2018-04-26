@@ -8,9 +8,9 @@
 				<div class="toggle">
 					<ul class="toggle-menu">
 						<li><a  href="index.php">Home</a></li>
-						<li><a class="active" href="menu.php">Menu</a></li>
+						<li><a  href="menu.php">Menu</a></li>
 						<li><a  href="contact.php">Contact</a></li>
-						<li><a  href="era.php">ERA</a></li>
+						<li><a class="active" href="era.php">ERA</a></li>
 
 					</ul>
 				</div>

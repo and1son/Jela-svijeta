@@ -19,6 +19,12 @@ nazivSastojak varchar(50) not null,
 slug varchar(50) not null
 );
 
+create table sastojak_en(
+sifra int not null primary key auto_increment,
+nazivSastojak_en varchar(50) not null,
+slug varchar(50) not null
+);
+
 create table jelo_sastojak(
 jelo int not null,
 sastojak int not null
@@ -28,6 +34,7 @@ sastojak int not null
 create table kategorija(
 sifra int not null primary key auto_increment,
 nazivKategorija varchar(50) not null,
+nazivKategorija_en varchar(50) not null,
 slug varchar(50) not null
 );
 
@@ -40,6 +47,8 @@ slug varchar(50) not null
 alter table jelo add foreign key (tag) references tag(sifra);
 alter table jelo_sastojak add foreign key (jelo) references jelo(sifra);
 alter table jelo_sastojak add foreign key (sastojak) references sastojak(sifra);
+alter table jelo_sastojak add foreign key (sastojak) references sastojak_en(sifra);
+
 alter table jelo add foreign key (kategorija) references kategorija(sifra);
 
 insert into sastojak(nazivSastojak,slug) values
@@ -61,6 +70,25 @@ insert into sastojak(nazivSastojak,slug) values
 	('mozzarela','slug-mozzarela'),
 	('bosiljak','slug-bosiljak');
 
+	insert into sastojak_en(nazivSastojak_en,slug) values
+	('tomato','slug-rajc'),
+	('cheese','slug-sir'),
+	('mushrooms','slug-gljive'),
+	('ham','slug-sunka'),
+	('sausage','slug-kobasica'),
+	('beans','slug-grah'),
+	('corn','slug-kukuruz'),
+	('pepperoni','slug-feferoni'),
+	('ham','slug-pršut'),
+	('olives','slug-masline'),
+	('suhi vrat','slug-suhivrat'),
+	('egg','slug-jaje'),
+	('kethup','slug-kethup'),
+	('bacon','slug-slanina'),
+	('onion','slug-luk'),
+	('mozzarela','slug-mozzarela'),
+	('basil','slug-bosiljak');
+
 insert into kategorija(nazivKategorija,slug) values
 	('pizza','slug-pizza'),
 	('grill','slug-grill'),
@@ -71,6 +99,17 @@ insert into kategorija(nazivKategorija,slug) values
 	('vege','slug-vege'),
 	('doručak','slug-dorucak'),
 	('deserti','slug-deserti');
+
+insert into kategorija(nazivKategorija_en,slug) values
+	('pizza','slug-pizza'),
+	('grill','slug-grill'),
+	('sandwiches','slug-sendvici'),
+	('salad','slug-salate'),
+	('fish','slug-riba'),
+	('soup','slug-juha'),
+	('vege','slug-vege'),
+	('breakfast','slug-dorucak'),
+	('desserts','slug-deserti');
 
 insert into tag(nazivTag,slug) values
 	('naslov taga 1','slug-tag1'),

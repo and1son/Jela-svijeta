@@ -26,7 +26,6 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
 <!--content-->
   <?php include_once 'include/content-menu.php'; ?>
 
-
 	   <section class="head index-part-1">      
           <div class="wow">
           <div class="container">
@@ -37,12 +36,19 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   <input type="text" name="uvjet" 
                   placeholder="<?php echo $lang['term'];?>"
                   value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
-                </form
+                </form>
+                <ul>
+                 <a href="?lang=english">English</a>
+                 <a href="?lang=croatian">Croatian</a>
+                </ul>
              
                 <?php
           
                 $uvjet = "%" . (isset($_GET["uvjet"]) ? $_GET["uvjet"] : "") . "%";
-                
+    
+                print_r($_SESSION);
+
+                if(isset($_SESSION['croatian'])){
                 $izraz = $veza->prepare("            
                   select 
                     count(DISTINCT a.sifra)
@@ -51,7 +57,18 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
           					inner join kategorija c on a.kategorija=c.sifra
                     inner join jelo_sastojak d on a.sifra=d.jelo
                     inner join sastojak e on d.sastojak=e.sifra  
-                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet");
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet"); 
+                }else{
+                $izraz = $veza->prepare("            
+                  select 
+                    count(DISTINCT a.sifra)
+                  from jelo a 
+                    inner join tag b on a.tag=b.sifra
+                    inner join kategorija c on a.kategorija=c.sifra
+                    inner join jelo_sastojak d on a.sifra=d.jelo
+                    inner join sastojak_en e on d.sastojak=e.sifra  
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak_en) like :uvjet"); 
+                }
                 $izraz->execute(array("uvjet"=>$uvjet));
                 $ukupnoRedova = $izraz->fetchColumn();
                 $ukupnoStranica = ceil($ukupnoRedova/$brojRezultataPoStranici);
@@ -78,7 +95,8 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                     <tbody>
                       
                 <?php
-                      
+                
+                if(isset($_SESSION['croatian'])){      
                 $izraz = $veza->prepare("
                   select 
                     a.sifra,
@@ -97,6 +115,27 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet
                   group by a.sifra, a.nazivJelo order by 1 limit :stranica, :brojRezultataPoStranici
                   ");
+              }else{
+                $izraz = $veza->prepare("
+                  select 
+                    a.sifra,
+                    a.nazivJelo,
+                    a.opis,
+                    a.cijena,
+                    b.nazivTag,
+                    c.nazivKategorija,
+                    GROUP_CONCAT(DISTINCT e.nazivSastojak_en SEPARATOR ', ') as nazivSastojak
+                  
+                  from jelo a 
+                    inner join tag b on a.tag=b.sifra
+                    inner join kategorija c on a.kategorija=c.sifra
+                    inner join jelo_sastojak d on a.sifra=d.jelo
+                    inner join sastojak_en e on d.sastojak=e.sifra
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak_en) like :uvjet
+                  group by a.sifra, a.nazivJelo order by 1 limit :stranica, :brojRezultataPoStranici
+                  ");
+
+              }
                 $izraz->bindValue("stranica", $stranica* $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
                 $izraz->bindValue("brojRezultataPoStranici", $brojRezultataPoStranici, PDO::PARAM_INT);
                 $izraz->bindParam("uvjet", $uvjet);
@@ -131,6 +170,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
           </div>
         </div>
     </section>
+
 <!--footer-->
 	<?php include_once 'include/footer.php'; ?>
 	
