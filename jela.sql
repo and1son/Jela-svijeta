@@ -16,14 +16,10 @@ kategorija int null
 create table sastojak(
 sifra int not null primary key auto_increment,
 nazivSastojak varchar(50) not null,
-slug varchar(50) not null
-);
-
-create table sastojak_en(
-sifra int not null primary key auto_increment,
 nazivSastojak_en varchar(50) not null,
 slug varchar(50) not null
 );
+
 
 create table jelo_sastojak(
 jelo int not null,
@@ -47,47 +43,29 @@ slug varchar(50) not null
 alter table jelo add foreign key (tag) references tag(sifra);
 alter table jelo_sastojak add foreign key (jelo) references jelo(sifra);
 alter table jelo_sastojak add foreign key (sastojak) references sastojak(sifra);
-alter table jelo_sastojak add foreign key (sastojak) references sastojak_en(sifra);
+
 
 alter table jelo add foreign key (kategorija) references kategorija(sifra);
 
-insert into sastojak(nazivSastojak,slug) values
-	('rajčica','slug-rajc'),
-	('sir','slug-sir'),
-	('gljive','slug-gljive'),
-	('sunka','slug-sunka'),
-	('kobasica','slug-kobasica'),
-	('grah','slug-grah'),
-	('kukuruz','slug-kukuruz'),
-	('feferoni','slug-feferoni'),
-	('pršut','slug-pršut'),
-	('masline','slug-masline'),
-	('suhi vrat','slug-suhivrat'),
-	('jaje','slug-jaje'),
-	('kethup','slug-kethup'),
-	('slanina','slug-slanina'),
-	('luk','slug-luk'),
-	('mozzarela','slug-mozzarela'),
-	('bosiljak','slug-bosiljak');
+insert into sastojak(nazivSastojak,nazivSastojak_en,slug) values
+	('rajčica','tomato','slug-rajc'),
+	('sir','cheese','slug-sir'),
+	('gljive','mushrooms','slug-gljive'),
+	('sunka','ham','slug-sunka'),
+	('kobasica','sausage','slug-kobasica'),
+	('grah','beans','slug-grah'),
+	('kukuruz','corn','slug-kukuruz'),
+	('feferoni','pepperoni','slug-feferoni'),
+	('pršut','ham','slug-pršut'),
+	('masline','olives','slug-masline'),
+	('suhi vrat','suhi vrat','slug-suhivrat'),
+	('jaje','egg','slug-jaje'),
+	('kethup','kethup','slug-kethup'),
+	('slanina','bacon','slug-slanina'),
+	('luk','onion','slug-luk'),
+	('mozzarela','mozzarela','slug-mozzarela'),
+	('bosiljak','basil','slug-bosiljak');
 
-	insert into sastojak_en(nazivSastojak_en,slug) values
-	('tomato','slug-rajc'),
-	('cheese','slug-sir'),
-	('mushrooms','slug-gljive'),
-	('ham','slug-sunka'),
-	('sausage','slug-kobasica'),
-	('beans','slug-grah'),
-	('corn','slug-kukuruz'),
-	('pepperoni','slug-feferoni'),
-	('ham','slug-pršut'),
-	('olives','slug-masline'),
-	('suhi vrat','slug-suhivrat'),
-	('egg','slug-jaje'),
-	('kethup','slug-kethup'),
-	('bacon','slug-slanina'),
-	('onion','slug-luk'),
-	('mozzarela','slug-mozzarela'),
-	('basil','slug-bosiljak');
 
 insert into kategorija(nazivKategorija,slug) values
 	('pizza','slug-pizza'),
