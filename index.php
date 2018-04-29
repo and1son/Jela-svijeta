@@ -5,9 +5,8 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 
-<?php
-	require_once 'init.php';
-?>
+<?php include_once 'konfiguracija.php'; ?>
+
 <!DOCTYPE html>
 <html>
 <head>

@@ -6,8 +6,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 
 <?php include_once 'konfiguracija.php';
-require_once 'init.php';
-$stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
+$per_page = isset($_GET["per_page"]) ? $_GET["per_page"] : 4;
+$page = isset($_GET["page"]) ? $_GET["page"] : 1;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,25 +32,33 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
       <div class="container">
         <div class="row">
          <div class="font-1 helmet text-center">
-          
+
            <form method="get">
             <input type="text" name="uvjet" 
             placeholder="<?php echo $lang['term'];?>"
             value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
           </form>
           <ul>
-           <a href="?lang=english">English</a>
-           <a href="?lang=croatian">Croatian</a>
+           <a href="?lang=en">English</a>
+           <a href="?lang=hr">Croatian</a>
          </ul>
-         
+
          <?php
-         
+
          $uvjet = "%" . (isset($_GET["uvjet"]) ? $_GET["uvjet"] : "") . "%";
-         
+
+         if (isset($_GET["per_page"])) {
+            $per_page=$_GET["per_page"];
+            settype($per_page, "integer");
+          }
+     
+
+
+         print_r($_GET);
          print_r($_SESSION);
 
          switch($_SESSION['lang']){
-          case "croatian":
+          case "hr":
           $izraz = $veza->prepare("            
             select 
             count(DISTINCT a.sifra)
@@ -61,11 +70,11 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
             where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet"); 
           $izraz->execute(array("uvjet"=>$uvjet));
           $ukupnoRedova = $izraz->fetchColumn();
-          $ukupnoStranica = ceil($ukupnoRedova/$brojRezultataPoStranici);
+          $ukupnoStranica = ceil($ukupnoRedova/$per_page);
           echo ("hrvatski 1");
           break;
-          
-          case "english":
+
+          case "en":
           $izraz1 = $veza->prepare("            
             select 
             count(DISTINCT a.sifra)
@@ -74,26 +83,25 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
             inner join kategorija c on a.kategorija=c.sifra
             inner join jelo_sastojak d on a.sifra=d.jelo
             inner join sastojak e on d.sastojak=e.sifra  
-            where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak_en) like :uvjet"); 
+            where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :uvjet"); 
           echo ("engleski 1");
 
           $izraz1->execute(array("uvjet"=>$uvjet));
           $ukupnoRedova = $izraz1->fetchColumn();
-          $ukupnoStranica = ceil($ukupnoRedova/$brojRezultataPoStranici);
+          $ukupnoStranica = ceil($ukupnoRedova/$per_page);
           break;
 
+        }
 
+        if($page<1){
+          $page=1;
         }
-        
-        if($stranica<1){
-          $stranica=1;
-        }
-        if($ukupnoStranica>0 && $stranica>$ukupnoStranica){
-          $stranica=$ukupnoStranica;
+        if($ukupnoStranica>0 && $page>$ukupnoStranica){
+          $page=$ukupnoStranica;
         }
 
         ?>
-        
+
         <div class="table-responsive">          
           <table class="table">
             <thead>
@@ -105,12 +113,12 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
               </tr>
             </thead>
             <tbody>
-              
+
               <?php
 
-              
+
               switch($_SESSION['lang']){
-                case "croatian":
+                case "hr":
                 $izraz = $veza->prepare("
                   select 
                   a.sifra,
@@ -127,27 +135,27 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
                   where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet
-                  group by a.sifra, a.nazivJelo order by 1 limit :stranica, :brojRezultataPoStranici
+                  group by a.sifra, a.nazivJelo order by 1 limit :page, :per_page
                   ");
                 echo ("hrvatski 2");
 
-                $izraz->bindValue("stranica", $stranica* $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
-                $izraz->bindValue("brojRezultataPoStranici", $brojRezultataPoStranici, PDO::PARAM_INT);
+                $izraz->bindValue("page", $page * $per_page -  $per_page, PDO::PARAM_INT);
+                $izraz->bindValue("per_page", $per_page, PDO::PARAM_INT);
                 $izraz->bindParam("uvjet", $uvjet);
                 $izraz->execute();
                 $rezultati = $izraz->fetchAll(PDO::FETCH_OBJ);
                 break;
 
 
-                case "english":
+                case "en":
                 $izraz1 = $veza->prepare("
                   select 
                   a.sifra,
-                  a.nazivJelo,
+                  a.nazivJelo_en as nazivJelo,
                   a.opis,
                   a.cijena,
-                  b.nazivTag,
-                  c.nazivKategorija,
+                  b.nazivTag_en as nazivTag,
+                  c.nazivKategorija_en as nazivKategorija,
                   GROUP_CONCAT(DISTINCT e.nazivSastojak_en SEPARATOR ', ') as nazivSastojak
                   
                   from jelo a 
@@ -155,13 +163,13 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
                   inner join kategorija c on a.kategorija=c.sifra
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
-                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak_en) like :uvjet
-                  group by a.sifra, a.nazivJelo order by 1 limit :stranica, :brojRezultataPoStranici
+                  where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :uvjet
+                  group by a.sifra, a.nazivJelo_en order by 1 limit :page, :per_page
                   ");
                 echo ("engleski 2");
 
-                $izraz1->bindValue("stranica", $stranica* $brojRezultataPoStranici -  $brojRezultataPoStranici , PDO::PARAM_INT);
-                $izraz1->bindValue("brojRezultataPoStranici", $brojRezultataPoStranici, PDO::PARAM_INT);
+                $izraz1->bindValue("page", $page * $per_page -  $per_page , PDO::PARAM_INT);
+                $izraz1->bindValue("per_page", $per_page, PDO::PARAM_INT);
                 $izraz1->bindParam("uvjet", $uvjet);
                 $izraz1->execute();
                 $rezultati = $izraz1->fetchAll(PDO::FETCH_OBJ);
@@ -173,7 +181,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
               foreach ($rezultati as $red):
                ?>
                <tr>
-                 
+
                 <td><?php echo $red->nazivJelo; ?></td>
                 <td><?php echo $red->nazivTag; ?></td>
                 <td><?php echo $red->nazivKategorija; ?></td>
@@ -186,7 +194,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
         </table>
 
         <?php            
-        if($ukupnoRedova>$brojRezultataPoStranici){
+        if($ukupnoRedova>$per_page){
           include 'paginacija.php';
         }
         ?>
