@@ -34,9 +34,9 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
          <div class="font-1 helmet text-center">
 
            <form method="get">
-            <input type="text" name="uvjet" 
+            <input type="text" name="with" 
             placeholder="<?php echo $lang['term'];?>"
-            value="<?php echo isset($_GET["uvjet"]) ? $_GET["uvjet"] : "" ?>" />
+            value="<?php echo isset($_GET["with"]) ? $_GET["with"] : "" ?>" />
           </form>
           <ul>
            <a href="?lang=en">English</a>
@@ -45,7 +45,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
 
          <?php
 
-         $uvjet = "%" . (isset($_GET["uvjet"]) ? $_GET["uvjet"] : "") . "%";
+         $with = "%" . (isset($_GET["with"]) ? $_GET["with"] : "") . "%";
 
          if (isset($_GET["per_page"])) {
             $per_page=$_GET["per_page"];
@@ -67,8 +67,8 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
             inner join kategorija c on a.kategorija=c.sifra
             inner join jelo_sastojak d on a.sifra=d.jelo
             inner join sastojak e on d.sastojak=e.sifra  
-            where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet"); 
-          $izraz->execute(array("uvjet"=>$uvjet));
+            where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :with"); 
+          $izraz->execute(array("with"=>$with));
           $ukupnoRedova = $izraz->fetchColumn();
           $ukupnoStranica = ceil($ukupnoRedova/$per_page);
           echo ("hrvatski 1");
@@ -83,10 +83,10 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
             inner join kategorija c on a.kategorija=c.sifra
             inner join jelo_sastojak d on a.sifra=d.jelo
             inner join sastojak e on d.sastojak=e.sifra  
-            where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :uvjet"); 
+            where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with"); 
           echo ("engleski 1");
 
-          $izraz1->execute(array("uvjet"=>$uvjet));
+          $izraz1->execute(array("with"=>$with));
           $ukupnoRedova = $izraz1->fetchColumn();
           $ukupnoStranica = ceil($ukupnoRedova/$per_page);
           break;
@@ -134,14 +134,14 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   inner join kategorija c on a.kategorija=c.sifra
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
-                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :uvjet
+                  where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :with
                   group by a.sifra, a.nazivJelo order by 1 limit :page, :per_page
                   ");
                 echo ("hrvatski 2");
 
                 $izraz->bindValue("page", $page * $per_page -  $per_page, PDO::PARAM_INT);
                 $izraz->bindValue("per_page", $per_page, PDO::PARAM_INT);
-                $izraz->bindParam("uvjet", $uvjet);
+                $izraz->bindParam("with", $with);
                 $izraz->execute();
                 $rezultati = $izraz->fetchAll(PDO::FETCH_OBJ);
                 break;
@@ -163,14 +163,14 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   inner join kategorija c on a.kategorija=c.sifra
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
-                  where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :uvjet
+                  where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with
                   group by a.sifra, a.nazivJelo_en order by 1 limit :page, :per_page
                   ");
                 echo ("engleski 2");
 
                 $izraz1->bindValue("page", $page * $per_page -  $per_page , PDO::PARAM_INT);
                 $izraz1->bindValue("per_page", $per_page, PDO::PARAM_INT);
-                $izraz1->bindParam("uvjet", $uvjet);
+                $izraz1->bindParam("with", $with);
                 $izraz1->execute();
                 $rezultati = $izraz1->fetchAll(PDO::FETCH_OBJ);
                 break;
