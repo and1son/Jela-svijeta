@@ -10,6 +10,8 @@
 						<li><a class="active" href="index.php"><?php echo $lang['home'];?></a></li>
 						<li><a href="menu.php"><?php echo $lang['menu'];?> </a></li>
 						<li><a href="contact.php"><?php echo $lang['contact'];?></a></li>
+						<li><a href="era.php">ERA</a></li>
+
 					</ul>
 				</div>
 			<script>

@@ -5,20 +5,12 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 
-<?php include_once 'konfiguracija.php';
-require_once 'init.php';
-$stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
+<?php include_once 'konfiguracija.php';?>
 <!DOCTYPE html>
 <html>
 <head>
 	<?php include_once 'include/head.php'; ?>
-	<style>
-    table tbody tr td:nth-child(2), 
-    table tbody tr td:nth-child(3), 
-    table tbody tr td:nth-child(4){
-      text-align: left;
-    }
-  </style>
+
 </head>
 <body>
 	<?php include_once 'include/menu-era.php'; ?>		
@@ -30,7 +22,7 @@ $stranica = isset($_GET["stranica"]) ? $_GET["stranica"] : 1;?>
             <div class="row">
                <div class="font-1 helmet text-center">
                 
-                <img src="verzija3.png" alt="ERA">>
+                <img src="verzija4.png" alt="ERA">>
 
                
                </div>

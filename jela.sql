@@ -10,6 +10,8 @@ nazivJelo_en varchar(50) not null,
 opis varchar(50),
 cijena int,
 tag int not null,
+status varchar(15) not null default 'created',
+vrijeme_kreiranja int not null,
 kategorija int null
 
 );
@@ -26,6 +28,7 @@ slug varchar(50) not null
 create table jelo_sastojak(
 jelo int not null,
 sastojak int not null
+
 
 );
 
@@ -92,15 +95,32 @@ insert into tag(nazivTag,nazivTag_en,slug) values
 	('naslov taga 8','tag name 8','slug-tag8'),
 	('naslov taga 9','tag name 9','slug-tag9');
 
-insert into jelo(nazivJelo,nazivJelo_en,opis,cijena,tag,kategorija) values
-	('Margarita','Margarita','null','null','1','1'),
-	('Vesuvio','Vesuvio','null','null','2','1'),
-	('Slavonska','Slavonska','null','null','3','1'),
-	('Biftek na žaru','Grilled steak','null','null','1','2'),
-	('Biftek s gljivama','Steak with mushrooms','null','null','1','2'),
-	('Kulen sendvič','Kulen sandwich','null','null','1','3');
+insert into jelo(nazivJelo,nazivJelo_en,opis,cijena,tag,status,vrijeme_kreiranja,kategorija) values
+	('Margarita','Margarita','null','null','1','created',UNIX_TIMESTAMP(now()),'1'),
+	('Vesuvio','Vesuvio','null','null','2','created',UNIX_TIMESTAMP(now()),'1'),
+	('Slavonska','Slavonska','null','null','3','created',UNIX_TIMESTAMP(now()),'1'),
+	('Biftek na žaru','Grilled steak','null','null','1','created',UNIX_TIMESTAMP(now()),'2'),
+	('Biftek s gljivama','Steak with mushrooms','null','null','1','created',UNIX_TIMESTAMP(now()),'2'),
+	('Kulen sendvič','Kulen sandwich','null','null','1','created',UNIX_TIMESTAMP(now()),'3');
 
 
 insert into jelo_sastojak(jelo,sastojak) values
-	(1,1),(1,2),(1,3),(2,1),(2,4),(2,5),(2,6),(3,1),(3,5),(3,6),(3,7),(3,8),(4,1),(4,4),(4,5),(5,1),(5,2),(5,4),(6,3);
-
+	(1,1),
+	(1,2),
+	(1,3),
+	(2,1),
+	(2,4),
+	(2,5),
+	(2,6),
+	(3,1),
+	(3,5),
+	(3,6),
+	(3,7),
+	(3,8),
+	(4,1),
+	(4,4),
+	(4,5),
+	(5,1),
+	(5,2),
+	(5,4),
+	(6,3);

@@ -8,16 +8,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <?php include_once 'konfiguracija.php';
 $per_page = isset($_GET["per_page"]) ? $_GET["per_page"] : 4;
 $page = isset($_GET["page"]) ? $_GET["page"] : 1;
+$diff_time = isset($_GET["diff_time"]) ? $_GET["diff_time"] : 1525080845;
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <?php include_once 'include/head.php'; ?>
   <style>
-  table tbody tr td:nth-child(2), 
-  table tbody tr td:nth-child(3), 
-  table tbody tr td:nth-child(4){
-    text-align: left;
+  body > section > div > div > div > div > div > table > thead > tr > th:nth-child(1),
+  body > section > div > div > div > div > div > table > thead > tr > th:nth-child(2),
+  body > section > div > div > div > div > div > table > thead > tr > th:nth-child(3),
+  body > section > div > div > div > div > div > table > thead > tr > th:nth-child(4),
+  body > section > div > div > div > div > div > table > thead > tr > th:nth-child(5)
+  {
+    text-align: center;
   }
 </style>
 </head>
@@ -51,11 +56,18 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
             $per_page=$_GET["per_page"];
             settype($per_page, "integer");
           }
-     
 
+         if (isset($_GET["diff_time"])) {
+            $diff_time=$_GET["diff_time"];
+        
+          }
+               
+        // $diff_time = strtotime("now");
 
-         print_r($_GET);
-         print_r($_SESSION);
+         //print_r($_GET);
+         //print_r($_SESSION);
+         //print_r($diff_time);
+
 
          switch($_SESSION['lang']){
           case "hr":
@@ -71,7 +83,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
           $izraz->execute(array("with"=>$with));
           $ukupnoRedova = $izraz->fetchColumn();
           $ukupnoStranica = ceil($ukupnoRedova/$per_page);
-          echo ("hrvatski 1");
+         
           break;
 
           case "en":
@@ -84,7 +96,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
             inner join jelo_sastojak d on a.sifra=d.jelo
             inner join sastojak e on d.sastojak=e.sifra  
             where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with"); 
-          echo ("engleski 1");
+         
 
           $izraz1->execute(array("with"=>$with));
           $ukupnoRedova = $izraz1->fetchColumn();
@@ -110,6 +122,8 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                 <th><?php echo $lang['tag'];?></th>
                 <th><?php echo $lang['category'];?></th>
                 <th><?php echo $lang['ingredient'];?></th>
+                <th><?php echo 'timestamp'?></th>
+
               </tr>
             </thead>
             <tbody>
@@ -125,6 +139,8 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   a.nazivJelo,
                   a.opis,
                   a.cijena,
+                  a.vrijeme_kreiranja,
+
                   b.nazivTag,
                   c.nazivKategorija,
                   GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak
@@ -137,7 +153,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   where concat(a.nazivJelo,b.nazivTag,c.nazivKategorija,e.nazivSastojak) like :with
                   group by a.sifra, a.nazivJelo order by 1 limit :page, :per_page
                   ");
-                echo ("hrvatski 2");
+                
 
                 $izraz->bindValue("page", $page * $per_page -  $per_page, PDO::PARAM_INT);
                 $izraz->bindValue("per_page", $per_page, PDO::PARAM_INT);
@@ -154,6 +170,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   a.nazivJelo_en as nazivJelo,
                   a.opis,
                   a.cijena,
+                  a.vrijeme_kreiranja,
                   b.nazivTag_en as nazivTag,
                   c.nazivKategorija_en as nazivKategorija,
                   GROUP_CONCAT(DISTINCT e.nazivSastojak_en SEPARATOR ', ') as nazivSastojak
@@ -163,10 +180,11 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                   inner join kategorija c on a.kategorija=c.sifra
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
-                  where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with
+                  where concat(a.nazivJelo_en,a.vrijeme_kreiranja,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with
+                  AND a.vrijeme_kreiranja >'" . $diff_time . "' 
                   group by a.sifra, a.nazivJelo_en order by 1 limit :page, :per_page
                   ");
-                echo ("engleski 2");
+              
 
                 $izraz1->bindValue("page", $page * $per_page -  $per_page , PDO::PARAM_INT);
                 $izraz1->bindValue("per_page", $per_page, PDO::PARAM_INT);
@@ -175,6 +193,7 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                 $rezultati = $izraz1->fetchAll(PDO::FETCH_OBJ);
                 break;
               }
+     
 
               ?>
               <?php
@@ -186,6 +205,8 @@ $page = isset($_GET["page"]) ? $_GET["page"] : 1;
                 <td><?php echo $red->nazivTag; ?></td>
                 <td><?php echo $red->nazivKategorija; ?></td>
                 <td><?php echo $red->nazivSastojak; ?></td>
+                <td><?php echo $red->vrijeme_kreiranja; ?></td>
+
 
               </tr>
 
