@@ -122,7 +122,7 @@ $diff_time = isset($_GET["diff_time"]) ? $_GET["diff_time"] : 1525080845;
                 <th><?php echo $lang['tag'];?></th>
                 <th><?php echo $lang['category'];?></th>
                 <th><?php echo $lang['ingredient'];?></th>
-                <th><?php echo 'timestamp'?></th>
+
 
               </tr>
             </thead>
@@ -135,16 +135,17 @@ $diff_time = isset($_GET["diff_time"]) ? $_GET["diff_time"] : 1525080845;
                 case "hr":
                 $izraz = $veza->prepare("
                   select 
-                  a.sifra,
-                  a.nazivJelo,
-                  a.opis,
-                  a.cijena,
-                  a.vrijeme_kreiranja,
-
-                  b.nazivTag,
-                  c.nazivKategorija,
-                  GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak
-                  
+                    a.sifra,
+                    a.nazivJelo,
+                    a.opis,
+                    a.status,
+                    b.nazivTag,
+                    c.nazivKategorija,
+                    c.sifra,
+                    GROUP_CONCAT(DISTINCT e.nazivSastojak SEPARATOR ', ') as nazivSastojak,
+                    e.sifra,
+                    e.slug
+                    
                   from jelo a 
                   inner join tag b on a.tag=b.sifra
                   inner join kategorija c on a.kategorija=c.sifra
@@ -160,37 +161,54 @@ $diff_time = isset($_GET["diff_time"]) ? $_GET["diff_time"] : 1525080845;
                 $izraz->bindParam("with", $with);
                 $izraz->execute();
                 $rezultati = $izraz->fetchAll(PDO::FETCH_OBJ);
+                $json = json_encode($rezultati);
+               
+                echo '<pre>';
+                print_r($json);
+                echo '</pre>';
+
+
                 break;
 
 
                 case "en":
                 $izraz1 = $veza->prepare("
                   select 
-                  a.sifra,
-                  a.nazivJelo_en as nazivJelo,
-                  a.opis,
-                  a.cijena,
-                  a.vrijeme_kreiranja,
-                  b.nazivTag_en as nazivTag,
-                  c.nazivKategorija_en as nazivKategorija,
-                  GROUP_CONCAT(DISTINCT e.nazivSastojak_en SEPARATOR ', ') as nazivSastojak
+                    a.sifra as id,
+                    a.nazivJelo_en as nazivJelo,
+                    a.opis as description,
+                    a.status,
+                    b.nazivTag_en as nazivTag,
+                    c.nazivKategorija_en as nazivKategorija,
+                    c.sifra as idKategorija,
+                    c.slug,
+                    GROUP_CONCAT(DISTINCT e.nazivSastojak_en SEPARATOR ', ') as nazivSastojak,
+                    e.sifra,
+                    e.slug
                   
                   from jelo a 
                   inner join tag b on a.tag=b.sifra
                   inner join kategorija c on a.kategorija=c.sifra
                   inner join jelo_sastojak d on a.sifra=d.jelo
                   inner join sastojak e on d.sastojak=e.sifra
-                  where concat(a.nazivJelo_en,a.vrijeme_kreiranja,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with
+                  where concat(a.nazivJelo_en,b.nazivTag_en,c.nazivKategorija_en,e.nazivSastojak_en) like :with
                   AND a.vrijeme_kreiranja >'" . $diff_time . "' 
                   group by a.sifra, a.nazivJelo_en order by 1 limit :page, :per_page
-                  ");
-              
+                  ");                
 
                 $izraz1->bindValue("page", $page * $per_page -  $per_page , PDO::PARAM_INT);
                 $izraz1->bindValue("per_page", $per_page, PDO::PARAM_INT);
                 $izraz1->bindParam("with", $with);
                 $izraz1->execute();
+                
+
                 $rezultati = $izraz1->fetchAll(PDO::FETCH_OBJ);
+                $json = json_encode($rezultati);
+                
+                echo '<pre>';
+                print_r($json);
+                echo '</pre>';
+
                 break;
               }
      
@@ -205,9 +223,7 @@ $diff_time = isset($_GET["diff_time"]) ? $_GET["diff_time"] : 1525080845;
                 <td><?php echo $red->nazivTag; ?></td>
                 <td><?php echo $red->nazivKategorija; ?></td>
                 <td><?php echo $red->nazivSastojak; ?></td>
-                <td><?php echo $red->vrijeme_kreiranja; ?></td>
-
-
+       
               </tr>
 
             <?php endforeach; ?>

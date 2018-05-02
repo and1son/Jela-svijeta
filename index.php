@@ -5,14 +5,7 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 
-<?php include_once 'konfiguracija.php'; 
-
-if (isset($_GET['lang']) === true && in_array($_GET['lang'],$allowed_lang) === true) {
-	$_SESSION['lang'] = $_GET['lang'];
-}else{
-	$_SESSION['lang'] = 'hr';
-}
-?>
+<?php include_once 'konfiguracija.php'; ?>
 
 <!DOCTYPE html>
 <html>
