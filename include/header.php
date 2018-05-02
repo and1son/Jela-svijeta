@@ -25,7 +25,11 @@
 	</div>
 	<!-- start search-->	
 		<div class="banner">
-			<h4 class="animated wow fadeInTop" data-wow-duration="1000ms" data-wow-delay="500ms"><?php echo $lang['hello1'];?></h4>
+			<h4 class="animated wow fadeInTop" data-wow-duration="1000ms" data-wow-delay="500ms"><?php echo $lang['hello1'];?><h3>	  <ul>
+           <a href="?lang=en">English</a>
+           <a href="?lang=hr">Croatian</a>
+         </ul></h3></h4>
+	
 			<a class="scroll down" href="#content-down"><img src="images/down.png" alt=""></a>
 		</div>
 </div>

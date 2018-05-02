@@ -7,8 +7,8 @@
 			<a href="#" class="navicon"></a>
 				<div class="toggle">
 					<ul class="toggle-menu">
-						<li><a  href="index.php">Home</a></li>
-						<li><a  href="menu.php">Menu</a></li>
+						<li><a  href="index.php"><?php echo $lang['home'];?></a></li>
+						<li><a  href="menu.php"><?php echo $lang['menu'];?></a></li>
 						<li><a class="active" href="era.php">ERA</a></li>
 
 					</ul>
